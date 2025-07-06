@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -14,17 +14,17 @@
     }
     .container {
         display: grid;
-        grid-template-rows: 1fr 1fr; /* Øverste og nederste halvdel */
+        grid-template-columns: 1fr 1fr; /* venstre og højre halvdel */
         height: 100vh;
         width: 100vw;
     }
-    .top-row {
+    .left-column {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Kalender og Slides */
-        width: 100%;
+        grid-template-rows: 1fr 1fr; /* top og bund */
         height: 100%;
+        width: 100%;
     }
-    .bottom-row {
+    .right-column {
         width: 100%;
         height: 100%;
     }
@@ -37,15 +37,17 @@
 </head>
 <body>
     <div class="container">
-        <!-- Øverste række: Kalender (venstre) og Slides (højre) -->
-        <div class="top-row">
-            <iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&ctz=Europe%2FCopenhagen" title="Google Calendar"></iframe>
+        <!-- Venstre kolonne: top = Google Kalender, bund = Slides -->
+        <div class="left-column">
+            <!-- Google Kalender i listevisning -->
+            <iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen" title="Google Kalender - Listevisning"></iframe>
 
+            <!-- Google Slides -->
             <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRb_y8noPAO8Wlsq5XEuUOSqGjxqX_qw6O3ObdTHT_IGln017TUejxIiA3RFZ2i-1liluSuvMgf-Bez/pubembed?start=true&loop=true&delayms=10000" title="Google Slides" allowfullscreen></iframe>
         </div>
 
-        <!-- Nederste række: Borgernyt hjemmeside i fuld bredde -->
-        <div class="bottom-row">
+        <!-- Højre kolonne: Borgernyt.dk hjemmeside i fuld højde -->
+        <div class="right-column">
             <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" title="Borgernyt Aktiviteter" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
         </div>
     </div>
