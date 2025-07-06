@@ -1,54 +1,54 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Infoboard</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-        }
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            height: 100vh;
-            width: 100vw;
-        }
-        .calendar {
-            width: 100%;
-            height: 100%;
-        }
-        .slides-container {
-            display: grid;
-            grid-template-rows: 1fr 1fr;
-            width: 100%;
-            height: 100%;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Infoboard</title>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        height: 100vh;
+        width: 100vw;
+    }
+    .calendar {
+        width: 100%;
+        height: 100%;
+    }
+    .slides-container {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        width: 100%;
+        height: 100%;
+    }
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+</style>
 </head>
 <body>
     <div class="container">
         <!-- Left: Google Calendar -->
         <div class="calendar">
-            <iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&ctz=Europe%2FCopenhagen" frameborder="0" scrolling="no"></iframe>
+            <iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&ctz=Europe%2FCopenhagen"></iframe>
         </div>
 
         <!-- Right: Split horizontally for Google Slides and Website -->
         <div class="slides-container">
-            <!-- Top: Google Slides Pictures -->
-            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRb_y8noPAO8Wlsq5XEuUOSqGjxqX_qw6O3ObdTHT_IGln017TUejxIiA3RFZ2i-1liluSuvMgf-Bez/pubembed?start=true&loop=true&delayms=10000" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+            <!-- Top: Google Slides -->
+            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRb_y8noPAO8Wlsq5XEuUOSqGjxqX_qw6O3ObdTHT_IGln017TUejxIiA3RFZ2i-1liluSuvMgf-Bez/pubembed?start=true&loop=true&delayms=10000" allowfullscreen></iframe>
 
-            <!-- Bottom: Borgernyt URL -->
-            <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" title="Borgernyt Aktiviteter"></iframe>
+            <!-- Bottom: Borgernyt -->
+            <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" title="Borgernyt Aktiviteter" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
         </div>
     </div>
 </body>
