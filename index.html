@@ -46,6 +46,7 @@
         justify-content: center;
         align-items: center;
         font-size: 2em;
+        text-align: center;
     }
     #weather img {
         width: 80px;
@@ -79,13 +80,14 @@
 <script>
 async function fetchWeather() {
     const apiKey = "99ab5a0a923bb9ec265fe7e2e2001fe1";
-    const city = "Nørholm,DK"; // Fallback to city name
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=N%C3%B8rholm,DK&units=metric&lang=da&appid=${apiKey}`;
+    const encodedUrl = encodeURIComponent(`https://api.openweathermap.org/data/2.5/weather?q=N%C3%B8rholm,DK&units=metric&lang=da&appid=${apiKey}`);
+    const url = `https://api.allorigins.win/get?url=${encodedUrl}`;
 
     try {
         const response = await fetch(url);
         if (!response.ok) throw new Error('Netværksfejl');
-        const data = await response.json();
+        const raw = await response.json();
+        const data = JSON.parse(raw.contents);
 
         const temp = Math.round(data.main.temp);
         const desc = data.weather[0].description;
