@@ -11,6 +11,7 @@
         height: 100%;
         width: 100%;
         overflow: hidden;
+        font-family: sans-serif;
     }
     .container {
         display: grid;
@@ -39,6 +40,17 @@
         height: 100%;
         border: none;
     }
+    #weather {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+    }
+    #weather img {
+        width: 80px;
+        height: 80px;
+    }
 </style>
 </head>
 <body>
@@ -53,8 +65,8 @@
                 <!-- Google Slides -->
                 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRb_y8noPAO8Wlsq5XEuUOSqGjxqX_qw6O3ObdTHT_IGln017TUejxIiA3RFZ2i-1liluSuvMgf-Bez/pubembed?start=true&loop=true&delayms=10000" title="Google Slides" allowfullscreen></iframe>
 
-                <!-- Vejr fra yr.no for Nørholm, Denmark -->
-                <iframe src="https://www.yr.no/en/content/1-2629856/compact" title="Vejr Nørholm"></iframe>
+                <!-- Weather -->
+                <div id="weather">Indlæser vejr...</div>
             </div>
         </div>
 
@@ -63,5 +75,36 @@
             <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" title="Borgernyt Aktiviteter" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
         </div>
     </div>
+
+<script>
+async function fetchWeather() {
+    const apiKey = "99ab5a0a923bb9ec265fe7e2e2001fe1";
+    const city = "Nørholm,DK"; // Fallback to city name
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=N%C3%B8rholm,DK&units=metric&lang=da&appid=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Netværksfejl');
+        const data = await response.json();
+
+        const temp = Math.round(data.main.temp);
+        const desc = data.weather[0].description;
+        const icon = data.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+
+        document.getElementById('weather').innerHTML = `
+            <div>🌦️ Vejr i Nørholm</div>
+            <img src="${iconUrl}" alt="${desc}">
+            <div>${temp}°C, ${desc.charAt(0).toUpperCase() + desc.slice(1)}</div>
+        `;
+    } catch (error) {
+        document.getElementById('weather').innerText = "Kunne ikke hente vejrdata.";
+    }
+}
+
+// Initial fetch and auto-update every 15 minutes
+fetchWeather();
+setInterval(fetchWeather, 15 * 60 * 1000);
+</script>
 </body>
 </html>
