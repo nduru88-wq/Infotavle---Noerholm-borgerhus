@@ -26,8 +26,21 @@
         width: 100%;
     }
     .right-column {
+        display: flex;
+        flex-direction: column;
         width: 100%;
         height: 100%;
+    }
+    .top-banner {
+        background-color: black;
+        color: white;
+        text-align: center;
+        font-size: 24px;
+        padding: 15px;
+        flex-shrink: 0;
+    }
+    .right-content {
+        flex-grow: 1;
     }
     iframe {
         width: 100%;
@@ -47,9 +60,14 @@
             <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRb_y8noPAO8Wlsq5XEuUOSqGjxqX_qw6O3ObdTHT_IGln017TUejxIiA3RFZ2i-1liluSuvMgf-Bez/pubembed?start=true&loop=true&delayms=10000" title="Google Slides" allowfullscreen></iframe>
         </div>
 
-        <!-- Højre kolonne: Borgernyt.dk hjemmeside i fuld højde -->
+        <!-- Højre kolonne: Sort top banner og borgernyt.dk -->
         <div class="right-column">
-            <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" title="Borgernyt Aktiviteter" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            <div class="top-banner">
+                Aktuelle aktiviteter i Nørholm - Læs mere på via QR koden
+            </div>
+            <div class="right-content">
+                <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" title="Borgernyt Aktiviteter" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            </div>
         </div>
     </div>
 </body>
