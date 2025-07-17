@@ -21,7 +21,7 @@
     }
     .left-column {
         display: grid;
-        grid-template-rows: 1fr 1fr; /* top og bund */
+        grid-template-rows: auto 1fr 1fr; /* banner, kalender, slides */
         height: 100%;
         width: 100%;
     }
@@ -39,6 +39,13 @@
         padding: 15px;
         flex-shrink: 0;
     }
+    .calendar-banner {
+        background-color: black;
+        color: white;
+        text-align: center;
+        font-size: 24px;
+        padding: 15px;
+    }
     .right-content {
         flex-grow: 1;
     }
@@ -51,8 +58,11 @@
 </head>
 <body>
     <div class="container">
-        <!-- Venstre kolonne: top = Google Kalender, bund = Slides -->
+        <!-- Venstre kolonne: top banner, Google Kalender, Slides -->
         <div class="left-column">
+            <div class="calendar-banner">
+                Kalender over kommende aktiviteter i byen
+            </div>
             <!-- Google Kalender i listevisning -->
             <iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen" title="Google Kalender - Listevisning"></iframe>
 
