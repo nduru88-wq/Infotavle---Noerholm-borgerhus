@@ -15,13 +15,13 @@
     }
     .container {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* venstre og højre halvdel */
+        grid-template-columns: 1fr 1fr;
         height: 100vh;
         width: 100vw;
     }
     .left-column {
         display: grid;
-        grid-template-rows: auto 1fr 1fr; /* banner, kalender, slides */
+        grid-template-rows: auto 1fr 1fr;
         height: 100%;
         width: 100%;
     }
@@ -31,54 +31,85 @@
         width: 100%;
         height: 100%;
     }
-    .top-banner {
-        background-color: black;
+    .top-banner, .calendar-banner, .slides-banner {
         color: white;
         text-align: center;
-        font-size: 24px;
-        padding: 15px;
+        font-size: 20px;
+        padding: 10px;
         flex-shrink: 0;
+        font-weight: bold;
     }
     .calendar-banner {
-        background-color: black;
-        color: white;
-        text-align: center;
-        font-size: 24px;
-        padding: 15px;
+        background-color: #c62828; /* deep red */
+    }
+    .top-banner {
+        background-color: #2e7d32; /* rich green */
+    }
+    .slides-banner {
+        background-color: #1565c0; /* strong blue */
     }
     .right-content {
         flex-grow: 1;
+        position: relative;
     }
     iframe {
         width: 100%;
         height: 100%;
         border: none;
     }
+    .slides-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+    .slides-container iframe {
+        flex-grow: 1;
+        transform: scale(0.95); /* shrink a bit to fit */
+        transform-origin: top center;
+        margin-top: 5px;
+    }
 </style>
 </head>
 <body>
     <div class="container">
-        <!-- Venstre kolonne: top banner, Google Kalender, Slides -->
+        <!-- Venstre kolonne -->
         <div class="left-column">
             <div class="calendar-banner">
                 Kalender over kommende aktiviteter i byen
             </div>
-            <!-- Google Kalender i listevisning -->
+
+            <!-- Google Kalender -->
             <iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen" title="Google Kalender - Listevisning"></iframe>
 
-            <!-- Nederste del: Google Slides i fuld højde -->
-            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRb_y8noPAO8Wlsq5XEuUOSqGjxqX_qw6O3ObdTHT_IGln017TUejxIiA3RFZ2i-1liluSuvMgf-Bez/pubembed?start=true&loop=true&delayms=10000" title="Google Slides" allowfullscreen></iframe>
+            <!-- Google Slides -->
+            <div class="slides-container">
+                <div class="slides-banner">
+                    Støt det lokale erhvervsliv
+                </div>
+                <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRb_y8noPAO8Wlsq5XEuUOSqGjxqX_qw6O3ObdTHT_IGln017TUejxIiA3RFZ2i-1liluSuvMgf-Bez/pubembed?start=true&loop=true&delayms=10000" 
+                        title="Google Slides" allowfullscreen></iframe>
+            </div>
         </div>
 
-        <!-- Højre kolonne: Sort top banner og borgernyt.dk -->
+        <!-- Højre kolonne -->
         <div class="right-column">
             <div class="top-banner">
-                Aktuelle aktiviteter i Nørholm - Læs mere på via QR koden
+                Aktuelle aktiviteter - Læs mere på via QR koden
             </div>
             <div class="right-content">
-                <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" title="Borgernyt Aktiviteter" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+                <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" 
+                        title="Borgernyt Aktiviteter" 
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
             </div>
         </div>
     </div>
+
+    <script>
+        // Hard refresh every 30 minutes
+        setInterval(() => { location.reload(true); }, 1800000);
+    </script>
 </body>
 </html>
