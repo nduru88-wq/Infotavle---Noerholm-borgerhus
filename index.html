@@ -4,118 +4,177 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Infoboard</title>
+
 <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        font-family: sans-serif;
-    }
-    .container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        height: 100vh;
-        width: 100vw;
-    }
-    .left-column {
-        display: grid;
-        grid-template-rows: auto 1fr 1fr;
-        height: 100%;
-        width: 100%;
-    }
-    .right-column {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
-    }
-    .top-banner, .calendar-banner, .slides-banner {
-        color: white;
-        text-align: center;
-        font-size: 20px;
-        padding: 10px;
-        flex-shrink: 0;
-        font-weight: bold;
-    }
-    .calendar-banner {
-        background-color: #c62828;
-    }
-    .top-banner {
-        background-color: #2e7d32;
-    }
-    .slides-banner {
-        background-color: #1565c0;
-    }
-    .right-content {
-        flex-grow: 1;
-        position: relative;
-    }
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-    .slides-container {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        position: relative;
-    }
+
+html, body{
+margin:0;
+padding:0;
+height:100%;
+width:100%;
+overflow:hidden;
+font-family:sans-serif;
+}
+
+.container{
+display:grid;
+grid-template-columns:1fr 1fr;
+height:100vh;
+width:100vw;
+}
+
+.left-column{
+display:grid;
+grid-template-rows:auto 1fr 1fr;
+height:100%;
+width:100%;
+}
+
+.right-column{
+display:flex;
+flex-direction:column;
+width:100%;
+height:100%;
+}
+
+.top-banner,.calendar-banner,.slides-banner{
+color:white;
+text-align:center;
+font-size:20px;
+padding:10px;
+flex-shrink:0;
+font-weight:bold;
+}
+
+.calendar-banner{
+background-color:#c62828;
+}
+
+.top-banner{
+background-color:#2e7d32;
+}
+
+.slides-banner{
+background-color:#1565c0;
+}
+
+.right-content{
+flex-grow:1;
+position:relative;
+}
+
+iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
+.slides-container{
+display:flex;
+flex-direction:column;
+width:100%;
+height:100%;
+overflow:hidden;
+position:relative;
+background:black;
+}
+
+.slideshow{
+flex-grow:1;
+position:relative;
+}
+
+.slideshow img{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:contain;
+opacity:0;
+transition:opacity 1s;
+}
+
+.slideshow img.active{
+opacity:1;
+}
+
 </style>
 </head>
+
 <body>
-    <div class="container">
 
-        <!-- Venstre kolonne -->
-        <div class="left-column">
+<div class="container">
 
-            <div class="calendar-banner">
-                Kalender over kommende aktiviteter i byen
-            </div>
+<!-- VENSTRE -->
 
-            <!-- Google Kalender -->
-            <iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen" title="Google Kalender - Listevisning"></iframe>
+<div class="left-column">
 
-            <!-- Nyt indhold -->
-            <div class="slides-container">
-                <div class="slides-banner">
-                    Blandet information
-                </div>
+<div class="calendar-banner">
+Kalender over kommende aktiviteter i byen
+</div>
 
-                <iframe src="https://borgernyt.dk/infotavle-blandet/" 
-                        title="Borgernyt Blandet"
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-                </iframe>
+<!-- Google kalender -->
 
-            </div>
+<iframe src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen"></iframe>
 
-        </div>
+<!-- Slideshow -->
 
-        <!-- Højre kolonne -->
-        <div class="right-column">
+<div class="slides-container">
 
-            <div class="top-banner">
-                Aktuelle aktiviteter - Læs mere via QR koden
-            </div>
+<div class="slides-banner">
+Information
+</div>
 
-            <div class="right-content">
-                <iframe src="https://borgernyt.dk/infotavle-aktiviteter/" 
-                        title="Borgernyt Aktiviteter" 
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-                </iframe>
-            </div>
+<div class="slideshow">
 
-        </div>
+<img src="SH-generalinfo.jpg" class="active">
+<img src="SH-Brudens klædeskab.jpg">
+<img src="SH-Porsheden.jpg">
 
-    </div>
+</div>
+
+</div>
+
+</div>
+
+<!-- HØJRE -->
+
+<div class="right-column">
+
+<div class="top-banner">
+Aktuelle aktiviteter - Læs mere på via QR koden
+</div>
+
+<div class="right-content">
+
+<iframe src="https://borgernyt.dk/infotavle-blandet/"
+sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
-    // Hard refresh every 30 minutes
-    setInterval(() => { location.reload(true); }, 1800000);
+
+let slides=document.querySelectorAll(".slideshow img");
+let index=0;
+
+setInterval(()=>{
+
+slides[index].classList.remove("active");
+
+index=(index+1)%slides.length;
+
+slides[index].classList.add("active");
+
+},5000);
+
+
+// refresh hele siden hvert 30 min
+
+setInterval(()=>{location.reload(true)},1800000);
+
 </script>
 
 </body>
