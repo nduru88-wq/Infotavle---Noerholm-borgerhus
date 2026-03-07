@@ -35,7 +35,6 @@ html, body{
 
   --divider-dark:#161616;
   --divider-mid:#242424;
-  --divider-glow:rgba(255,255,255,0.06);
 }
 
 body{
@@ -180,7 +179,7 @@ iframe{
   height:100%;
   object-fit:contain;
   opacity:0;
-  transition:opacity 1s;
+  transition:opacity 1s ease;
   background:#000;
 }
 
@@ -231,7 +230,7 @@ iframe{
 
       <div class="slideshow">
         <img src="SH-generalinfo.jpg" class="active" alt="Sponsor 1">
-        <img src="SH-Brudens%20klaedeskab.jpg" alt="Sponsor 2">
+        <img src="SH-Brudens-klaedeskab.jpg" alt="Sponsor 2">
         <img src="SH-Porsheden.jpg" alt="Sponsor 3">
       </div>
     </div>
@@ -262,15 +261,13 @@ iframe{
 const slides = document.querySelectorAll(".slideshow img");
 let index = 0;
 
-if (slides.length > 0) {
-  slides[0].classList.add("active");
+if (slides.length > 1) {
+  setInterval(() => {
+    slides[index].classList.remove("active");
+    index = (index + 1) % slides.length;
+    slides[index].classList.add("active");
+  }, 5000);
 }
-
-setInterval(() => {
-  slides[index].classList.remove("active");
-  index = (index + 1) % slides.length;
-  slides[index].classList.add("active");
-}, 5000);
 
 function refreshIframe(frameId, baseUrl){
   const frame = document.getElementById(frameId);
@@ -294,15 +291,6 @@ setInterval(() => {
   const cleanUrl = window.location.origin + window.location.pathname + "?v=" + Date.now();
   window.location.replace(cleanUrl);
 }, 21600000);
-
-function refreshSlides(){
-  document.querySelectorAll(".slideshow img").forEach(img => {
-    const original = img.getAttribute("src").split("?")[0];
-    img.setAttribute("src", original + "?v=" + Date.now());
-  });
-}
-
-setInterval(refreshSlides, 1800000);
 </script>
 
 </body>
