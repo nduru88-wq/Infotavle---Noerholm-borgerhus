@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slideshow test</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+    }
+
+    .slideshow {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+    }
+
+    .slideshow img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 1s ease;
+      background: black;
+    }
+
+    .slideshow img.active {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slideshow">
+    <img src="SH-generalinfo.jpg" class="active" alt="">
+    <img src="SH-Brudens-klaedeskab.jpg" alt="">
+    <img src="SH-Porsheden.jpg" alt="">
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll(".slideshow img");
+    let index = 0;
+
+    setInterval(() => {
+      slides[index].classList.remove("active");
+      index = (index + 1) % slides.length;
+      slides[index].classList.add("active");
+    }, 5000);
+  </script>
+
+</body>
+</html>
