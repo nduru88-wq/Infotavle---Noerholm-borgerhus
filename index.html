@@ -45,7 +45,6 @@ body{
     var(--bg-main);
 }
 
-/* GRID */
 .container{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -56,7 +55,6 @@ body{
   background:var(--bg-shell);
 }
 
-/* KOLONNER */
 .left-column{
   display:grid;
   grid-template-rows:auto 1fr var(--gap) auto 1fr;
@@ -73,7 +71,6 @@ body{
   min-height:0;
 }
 
-/* PANEL */
 .panel{
   position:relative;
   min-width:0;
@@ -97,11 +94,8 @@ body{
   right:0;
   height:28%;
   background:linear-gradient(to bottom, rgba(255,255,255,0.04), transparent);
-  pointer-events:none;
-  z-index:1;
 }
 
-/* INDHOLDSPANELER */
 .calendar-content,
 .right-content{
   position:relative;
@@ -112,19 +106,14 @@ body{
   flex:1;
 }
 
-/* BANNERS */
 .top-banner,
 .calendar-banner,
 .slides-banner{
-  position:relative;
-  z-index:2;
   color:white;
   text-align:center;
   font-size:16px;
   padding:6px;
   font-weight:600;
-  letter-spacing:0.2px;
-  flex-shrink:0;
 }
 
 .calendar-banner{
@@ -139,20 +128,14 @@ body{
   background:linear-gradient(#2a78d2,#164e91);
 }
 
-/* INNER FRAME */
 .frame-inner{
   position:absolute;
   inset:0;
   border-radius:calc(var(--panel-radius) - 1px);
   background:#000;
   overflow:hidden;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.04),
-    inset 0 10px 25px rgba(0,0,0,0.6);
-  z-index:0;
 }
 
-/* IFRAME */
 iframe{
   width:100%;
   height:100%;
@@ -161,7 +144,6 @@ iframe{
   background:white;
 }
 
-/* ZOOMET KALENDER */
 .calendar-zoom{
   position:absolute;
   top:0;
@@ -172,12 +154,10 @@ iframe{
   transform-origin:0 0;
 }
 
-/* SLIDES */
 .slides-container{
   display:flex;
   flex-direction:column;
   height:100%;
-  min-height:0;
 }
 
 .slideshow{
@@ -185,7 +165,6 @@ iframe{
   flex:1;
   background:#000;
   overflow:hidden;
-  min-height:0;
 }
 
 .slideshow img{
@@ -196,14 +175,12 @@ iframe{
   object-fit:contain;
   opacity:0;
   transition:opacity 1s;
-  background:#000;
 }
 
 .slideshow img.active{
   opacity:1;
 }
 
-/* DIVIDER */
 .divider-horizontal{
   height:var(--gap);
   width:100%;
@@ -214,7 +191,6 @@ iframe{
     var(--divider-mid),
     var(--divider-dark)
   );
-  box-shadow:0 0 4px var(--divider-glow);
 }
 </style>
 </head>
@@ -223,101 +199,110 @@ iframe{
 
 <div class="container">
 
-  <!-- VENSTRE -->
-  <div class="left-column">
+<div class="left-column">
 
-    <div class="calendar-banner panel">
-      Kalender over kommende aktiviteter i byen
-    </div>
+<div class="calendar-banner panel">
+Kalender over kommende aktiviteter i byen
+</div>
 
-    <div class="calendar-content panel">
-      <div class="frame-inner">
-        <iframe
-          id="calendarFrame"
-          class="calendar-zoom"
-          src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0">
-        </iframe>
-      </div>
-    </div>
+<div class="calendar-content panel">
+<div class="frame-inner">
 
-    <div class="divider-horizontal"></div>
+<iframe
+id="calendarFrame"
+class="calendar-zoom"
+src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0">
+</iframe>
 
-    <div class="slides-container panel">
-      <div class="slides-banner">
-        Lokalt erhvervsliv (sponsorer)
-      </div>
+</div>
+</div>
 
-      <div class="slideshow">
-        <img src="SH-generalinfo.jpg" class="active" alt="Sponsor 1">
-        <img src="SH-Brudens%20kl%C3%A6deskab.jpg" alt="Sponsor 2">
-        <img src="SH-Porsheden.jpg" alt="Sponsor 3">
-      </div>
-    </div>
+<div class="divider-horizontal"></div>
 
-  </div>
+<div class="slides-container panel">
 
-  <!-- HØJRE -->
-  <div class="right-column">
+<div class="slides-banner">
+Lokalt erhvervsliv (sponsorer)
+</div>
 
-    <div class="top-banner panel">
-      Aktuelle aktiviteter - Læs mere via QR koden
-    </div>
+<div class="slideshow">
 
-    <div class="right-content panel">
-      <div class="frame-inner">
-        <iframe
-          id="newsFrame"
-          src="https://borgernyt.dk/infotavle-blandet/"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-        </iframe>
-      </div>
-    </div>
+<img src="SH-generalinfo.jpg" class="active">
 
-  </div>
+<img src="SH-brudens-klaedeskab.jpg">
+
+<img src="SH-porsheden.jpg">
+
+</div>
+
+</div>
+
+</div>
+
+<div class="right-column">
+
+<div class="top-banner panel">
+Aktuelle aktiviteter - Læs mere via QR koden
+</div>
+
+<div class="right-content panel">
+
+<div class="frame-inner">
+
+<iframe
+id="newsFrame"
+src="https://borgernyt.dk/infotavle-blandet/"
+sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+</iframe>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 <script>
-const slides = document.querySelectorAll(".slideshow img");
-let index = 0;
 
-setInterval(() => {
-  slides[index].classList.remove("active");
-  index = (index + 1) % slides.length;
-  slides[index].classList.add("active");
-}, 5000);
+const slides=document.querySelectorAll(".slideshow img");
+let index=0;
 
-function refreshIframe(frameId, baseUrl){
-  const frame = document.getElementById(frameId);
-  const sep = baseUrl.includes("?") ? "&" : "?";
-  frame.src = baseUrl + sep + "_ts=" + Date.now();
+setInterval(()=>{
+
+slides[index].classList.remove("active");
+
+index=(index+1)%slides.length;
+
+slides[index].classList.add("active");
+
+},5000);
+
+
+function refreshIframe(frameId,baseUrl){
+
+const frame=document.getElementById(frameId);
+
+const sep=baseUrl.includes("?")?"&":"?";
+
+frame.src=baseUrl+sep+"_ts="+Date.now();
+
 }
 
-setInterval(() => {
-  refreshIframe(
-    "newsFrame",
-    "https://borgernyt.dk/infotavle-blandet/"
-  );
+setInterval(()=>{
 
-  refreshIframe(
-    "calendarFrame",
-    "https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0"
-  );
-}, 1800000);
+refreshIframe(
+"newsFrame",
+"https://borgernyt.dk/infotavle-blandet/"
+);
 
-setInterval(() => {
-  const cleanUrl = window.location.origin + window.location.pathname + "?v=" + Date.now();
-  window.location.replace(cleanUrl);
-}, 21600000);
+refreshIframe(
+"calendarFrame",
+"https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0"
+);
 
-function refreshSlides(){
-  document.querySelectorAll(".slideshow img").forEach(img => {
-    const original = img.getAttribute("src").split("?")[0];
-    img.setAttribute("src", original + "?v=" + Date.now());
-  });
-}
+},1800000);
 
-setInterval(refreshSlides, 1800000);
 </script>
 
 </body>
