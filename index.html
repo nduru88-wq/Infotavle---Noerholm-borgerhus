@@ -279,6 +279,14 @@ iframe{
   z-index:2;
 }
 
+.slideshow-message{
+  color:#fff;
+  font-size:18px;
+  text-align:center;
+  padding:20px;
+  z-index:3;
+}
+
 .divider-horizontal{
   height:var(--gap);
   width:100%;
@@ -374,10 +382,8 @@ iframe{
         Lokalt erhvervsliv (sponsorer)
       </div>
 
-      <div class="slideshow">
-        <img src="SH-generalinfo.jpg" class="active" alt="Sponsor 1">
-        <img src="SH-Brudens-klaedeskab.jpg" alt="Sponsor 2">
-        <img src="SH-Porsheden.jpg" alt="Sponsor 3">
+      <div class="slideshow" id="sponsorSlideshow">
+        <div class="slideshow-message" id="slideshowMessage">Indlæser sponsorbilleder...</div>
       </div>
     </div>
 
@@ -405,15 +411,118 @@ iframe{
 </div>
 
 <script>
-const slides = document.querySelectorAll(".slideshow img");
-let index = 0;
+const GITHUB_FOLDER = "sponsorer";
+const slideshow = document.getElementById("sponsorSlideshow");
+const slideshowMessage = document.getElementById("slideshowMessage");
 
-if (slides.length > 1) {
-  setInterval(() => {
-    slides[index].classList.remove("active");
-    index = (index + 1) % slides.length;
-    slides[index].classList.add("active");
-  }, 5000);
+let slides = [];
+let currentSlideIndex = 0;
+let slideInterval = null;
+
+function detectGitHubInfo() {
+  const host = window.location.hostname;
+  const pathParts = window.location.pathname.split("/").filter(Boolean);
+
+  let owner = "";
+  let repo = "";
+
+  if (host.endsWith(".github.io")) {
+    owner = host.split(".github.io")[0];
+
+    if (pathParts.length > 0) {
+      repo = pathParts[0];
+    } else {
+      repo = owner + ".github.io";
+    }
+  }
+
+  return { owner, repo };
+}
+
+function getGitHubApiUrl() {
+  const { owner, repo } = detectGitHubInfo();
+  return `https://api.github.com/repos/${owner}/${repo}/contents/${GITHUB_FOLDER}`;
+}
+
+function isImageFile(filename) {
+  return /\.(jpg|jpeg|png|webp|gif)$/i.test(filename);
+}
+
+function clearSlides() {
+  slideshow.querySelectorAll("img").forEach(img => img.remove());
+}
+
+function showMessage(text) {
+  if (slideshowMessage) {
+    slideshowMessage.textContent = text;
+    slideshowMessage.style.display = "block";
+  }
+}
+
+function hideMessage() {
+  if (slideshowMessage) {
+    slideshowMessage.style.display = "none";
+  }
+}
+
+function startSlideshow() {
+  if (slideInterval) clearInterval(slideInterval);
+
+  if (slides.length > 1) {
+    slideInterval = setInterval(() => {
+      slides[currentSlideIndex].classList.remove("active");
+      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+      slides[currentSlideIndex].classList.add("active");
+    }, 5000);
+  }
+}
+
+function renderSlides(imageUrls) {
+  clearSlides();
+
+  if (!imageUrls.length) {
+    showMessage("Ingen billeder fundet i mappen sponsorer.");
+    slides = [];
+    return;
+  }
+
+  hideMessage();
+
+  imageUrls.forEach((url, index) => {
+    const img = document.createElement("img");
+    img.src = url + "?v=" + Date.now();
+    img.alt = `Sponsor ${index + 1}`;
+    if (index === 0) img.classList.add("active");
+    slideshow.appendChild(img);
+  });
+
+  slides = slideshow.querySelectorAll("img");
+  currentSlideIndex = 0;
+  startSlideshow();
+}
+
+async function loadSponsorImages() {
+  try {
+    const apiUrl = getGitHubApiUrl();
+    const response = await fetch(apiUrl, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error("Kunne ikke hente mapper fra GitHub API");
+    }
+
+    const files = await response.json();
+
+    const imageUrls = files
+      .filter(file => file.type === "file" && isImageFile(file.name))
+      .sort((a, b) => a.name.localeCompare(b.name, "da", { numeric: true }))
+      .map(file => file.download_url);
+
+    renderSlides(imageUrls);
+
+  } catch (error) {
+    console.error(error);
+    showMessage("Fejl ved indlæsning af sponsorbilleder.");
+  }
 }
 
 function refreshIframe(frameId, baseUrl){
@@ -435,21 +544,18 @@ setInterval(() => {
   );
 }, 1800000);
 
-function refreshSlides(){
-  document.querySelectorAll(".slideshow img").forEach(img => {
-    const original = img.getAttribute("src").split("?")[0];
-    img.setAttribute("src", original + "?v=" + Date.now());
-  });
-}
-
-setInterval(refreshSlides, 1800000);
+setInterval(() => {
+  loadSponsorImages();
+}, 1800000);
 
 setInterval(() => {
   const cleanUrl = window.location.origin + window.location.pathname + "?v=" + Date.now();
   window.location.replace(cleanUrl);
 }, 21600000);
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
+  await loadSponsorImages();
+
   setTimeout(() => {
     const splash = document.getElementById("splashScreen");
     if (splash) {
