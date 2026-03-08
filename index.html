@@ -48,12 +48,12 @@ html, body{
   --safe-top:env(safe-area-inset-top, 0px);
   --safe-bottom:env(safe-area-inset-bottom, 0px);
 
-  /* Rykket lidt op igen i forhold til sidste version */
-  --top-offset:8px;
+  /* Rykket lidt mere op */
+  --top-offset:4px;
 
-  /* Beskæring af højre iframe så tekst nederst skjules mere */
-  --news-scale:1.05;
-  --news-shift-y:-78px;
+  /* Højre iframe: vis toppen først */
+  --news-scale:1.08;
+  --news-top-offset:0px;
 }
 
 body{
@@ -236,18 +236,15 @@ iframe{
 
 .news-zoom{
   position:absolute;
-  top:50%;
-  left:50%;
+  top:var(--news-top-offset);
+  left:0;
   width:100%;
   height:100%;
   border:none;
   display:block;
   background:white;
-  transform:
-    translate(-50%, -50%)
-    translateY(var(--news-shift-y))
-    scale(var(--news-scale));
-  transform-origin:center center;
+  transform:scale(var(--news-scale));
+  transform-origin:top center;
 }
 
 .slideshow{
@@ -293,9 +290,9 @@ iframe{
 
 @media (orientation: portrait){
   :root{
-    --top-offset:6px;
-    --news-scale:1.08;
-    --news-shift-y:-92px;
+    --top-offset:2px;
+    --news-scale:1.10;
+    --news-top-offset:0px;
   }
 
   .container{
