@@ -50,12 +50,12 @@ html, body{
 
   --top-offset:2px;
 
-  /* Højre nyhedsfelt */
-  --news-scale:0.88;
-  --news-top-offset:-10px;
-  --news-left-offset:-6%;
-  --news-width:112%;
-  --news-height:112%;
+  /* højre felt */
+  --news-scale:0.90;
+  --news-top:0px;
+  --news-left:0px;
+  --news-width:100%;
+  --news-height:100%;
 
   --banner-pad-y:6px;
   --banner-pad-x:10px;
@@ -68,7 +68,7 @@ body{
     var(--bg-main);
 }
 
-/* Splash screen */
+/* Splash */
 #splashScreen{
   position:fixed;
   inset:0;
@@ -138,8 +138,7 @@ body{
 
 .right-column{
   display:grid;
-  grid-template-rows:auto minmax(0, 1fr);
-  gap:var(--gap);
+  grid-template-rows:minmax(0, 1fr);
   min-width:0;
   min-height:0;
 }
@@ -171,44 +170,47 @@ body{
   z-index:1;
 }
 
-.left-section{
+.left-section,
+.right-section{
   display:flex;
   flex-direction:column;
   min-width:0;
   min-height:0;
 }
 
-.top-banner,
-.calendar-banner,
-.slides-banner{
+.banner{
   position:relative;
   z-index:3;
-  color:white;
+  color:#fff;
   text-align:center;
   font-size:16px;
-  padding:var(--banner-pad-y) var(--banner-pad-x);
   font-weight:700;
+  padding:var(--banner-pad-y) var(--banner-pad-x);
   flex:0 0 auto;
-  border-top-left-radius:var(--panel-radius);
-  border-top-right-radius:var(--panel-radius);
+  margin:0;
+  border-radius:0;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.18),
     inset 0 -1px 0 rgba(0,0,0,0.35);
 }
 
+.panel > .banner:first-child,
+.left-section > .banner:first-child,
+.right-section > .banner:first-child{
+  border-top-left-radius:var(--panel-radius);
+  border-top-right-radius:var(--panel-radius);
+}
+
 .calendar-banner{
-  background:
-    linear-gradient(180deg, #dc3a3a 0%, #b52020 55%, #8f1515 100%);
+  background:linear-gradient(180deg, #dc3a3a 0%, #b62020 55%, #8f1515 100%);
 }
 
 .top-banner{
-  background:
-    linear-gradient(180deg, #3f9f47 0%, #2c7f33 55%, #215f27 100%);
+  background:linear-gradient(180deg, #3f9f47 0%, #2c7f33 55%, #215f27 100%);
 }
 
 .slides-banner{
-  background:
-    linear-gradient(180deg, #3385e2 0%, #1f66bb 55%, #174d90 100%);
+  background:linear-gradient(180deg, #3385e2 0%, #1f66bb 55%, #174d90 100%);
 }
 
 .calendar-content,
@@ -222,7 +224,7 @@ body{
 .frame-inner{
   position:absolute;
   inset:0;
-  border-radius:calc(var(--panel-radius) - 1px);
+  border-radius:0 0 calc(var(--panel-radius) - 1px) calc(var(--panel-radius) - 1px);
   background:#000;
   overflow:hidden;
 }
@@ -247,13 +249,11 @@ iframe{
 
 .news-zoom{
   position:absolute;
-  top:var(--news-top-offset);
-  left:var(--news-left-offset);
+  top:var(--news-top);
+  left:var(--news-left);
   width:var(--news-width);
   height:var(--news-height);
-  border:none;
-  display:block;
-  background:white;
+  background:#fff;
   transform:scale(var(--news-scale));
   transform-origin:top left;
 }
@@ -310,11 +310,11 @@ iframe{
 @media (orientation: portrait){
   :root{
     --top-offset:1px;
-    --news-scale:0.88;
-    --news-top-offset:-6px;
-    --news-left-offset:-8%;
-    --news-width:116%;
-    --news-height:116%;
+    --news-scale:0.90;
+    --news-top:0px;
+    --news-left:0px;
+    --news-width:100%;
+    --news-height:100%;
     --banner-pad-y:7px;
     --banner-pad-x:10px;
   }
@@ -329,7 +329,7 @@ iframe{
   }
 
   .right-column{
-    grid-template-rows:auto minmax(0, 1fr);
+    grid-template-rows:minmax(0, 1fr);
   }
 
   .left-column,
@@ -337,9 +337,7 @@ iframe{
     min-height:0;
   }
 
-  .top-banner,
-  .calendar-banner,
-  .slides-banner{
+  .banner{
     font-size:14px;
   }
 
@@ -368,7 +366,7 @@ iframe{
   <div class="left-column">
 
     <div class="left-section panel">
-      <div class="calendar-banner">
+      <div class="banner calendar-banner">
         Kalender over kommende aktiviteter i byen
       </div>
 
@@ -386,7 +384,7 @@ iframe{
     <div class="divider-horizontal"></div>
 
     <div class="left-section panel">
-      <div class="slides-banner">
+      <div class="banner slides-banner">
         Lokalt erhvervsliv (sponsorer)
       </div>
 
@@ -398,22 +396,22 @@ iframe{
   </div>
 
   <div class="right-column">
+    <div class="right-section panel">
+      <div class="banner top-banner">
+        Aktuelle aktiviteter - Læs mere via QR koden
+      </div>
 
-    <div class="top-banner panel">
-      Aktuelle aktiviteter - Læs mere via QR koden
-    </div>
-
-    <div class="right-content panel">
-      <div class="frame-inner">
-        <iframe
-          id="newsFrame"
-          class="news-zoom"
-          src="https://borgernyt.dk/infotavle-blandet/"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-        </iframe>
+      <div class="right-content">
+        <div class="frame-inner">
+          <iframe
+            id="newsFrame"
+            class="news-zoom"
+            src="https://borgernyt.dk/infotavle-blandet/"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+          </iframe>
+        </div>
       </div>
     </div>
-
   </div>
 
 </div>
