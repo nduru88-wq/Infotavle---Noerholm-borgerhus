@@ -48,8 +48,8 @@ html, body{
   --safe-top:env(safe-area-inset-top, 0px);
   --safe-bottom:env(safe-area-inset-bottom, 0px);
 
-  /* Ekstra luft så dynamic island / kamera ikke dækker toppen */
-  --top-offset:22px;
+  /* Rykket lidt op igen i forhold til sidste version */
+  --top-offset:8px;
 
   /* Beskæring af højre iframe så tekst nederst skjules mere */
   --news-scale:1.05;
@@ -226,7 +226,7 @@ iframe{
 
 .calendar-zoom{
   position:absolute;
-  top:10px;         /* lidt ned, så toppen af google kalender ikke rammer kameraområdet */
+  top:10px;
   left:0;
   width:125%;
   height:125%;
@@ -293,7 +293,7 @@ iframe{
 
 @media (orientation: portrait){
   :root{
-    --top-offset:20px;
+    --top-offset:6px;
     --news-scale:1.08;
     --news-shift-y:-92px;
   }
@@ -328,7 +328,7 @@ iframe{
   }
 
   .calendar-zoom{
-    top:14px; /* ekstra luft i portrætvisning */
+    top:14px;
   }
 }
 </style>
