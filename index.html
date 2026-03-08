@@ -15,318 +15,311 @@
 
 <style>
 html, body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial, Helvetica, sans-serif;
-  background:#050505;
-  touch-action:manipulation;
+margin:0;
+padding:0;
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:Arial, Helvetica, sans-serif;
+background:#050505;
+touch-action:manipulation;
 }
 
 *{
-  box-sizing:border-box;
+box-sizing:border-box;
 }
 
 :root{
-  --panel-radius:18px;
-  --gap:2px;
-  --outer-padding:2px;
+--panel-radius:18px;
+--gap:2px;
+--outer-padding:2px;
 
-  --bg-main:#050505;
-  --bg-shell:#0a0a0a;
-  --panel-bg:#0d0d0f;
+--bg-main:#050505;
+--bg-shell:#0a0a0a;
+--panel-bg:#0d0d0f;
 
-  --panel-border:rgba(255,255,255,0.05);
-  --panel-highlight:rgba(255,255,255,0.06);
-  --panel-shadow:rgba(0,0,0,0.60);
+--panel-border:rgba(255,255,255,0.05);
+--panel-highlight:rgba(255,255,255,0.06);
+--panel-shadow:rgba(0,0,0,0.60);
 
-  --divider-dark:#161616;
-  --divider-mid:#242424;
+--divider-dark:#161616;
+--divider-mid:#242424;
 
-  --safe-top:env(safe-area-inset-top, 0px);
-  --safe-bottom:env(safe-area-inset-bottom, 0px);
+--safe-top:env(safe-area-inset-top, 0px);
+--safe-bottom:env(safe-area-inset-bottom, 0px);
 
-  /* Rykket lidt mere op */
-  --top-offset:4px;
+--top-offset:2px;
 
-  /* Højre iframe: vis toppen først */
-  --news-scale:1.08;
-  --news-top-offset:0px;
+--news-scale:1.08;
+--news-top-offset:0px;
 }
 
 body{
-  background:
-    radial-gradient(circle at top left, rgba(255,255,255,0.04), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 30%),
-    var(--bg-main);
+background:
+radial-gradient(circle at top left, rgba(255,255,255,0.04), transparent 30%),
+radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 30%),
+var(--bg-main);
 }
 
 /* Splash screen */
 #splashScreen{
-  position:fixed;
-  inset:0;
-  z-index:99999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  background:
-    radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(255,255,255,0.04), transparent 30%),
-    #050505;
-  opacity:1;
-  transition:opacity 0.8s ease;
+position:fixed;
+inset:0;
+z-index:99999;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+background:
+radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 30%),
+radial-gradient(circle at bottom right, rgba(255,255,255,0.04), transparent 30%),
+#050505;
+opacity:1;
+transition:opacity 0.8s ease;
 }
 
 #splashScreen.hide{
-  opacity:0;
-  pointer-events:none;
+opacity:0;
+pointer-events:none;
 }
 
 .splash-logo{
-  width:min(42vw, 220px);
-  height:min(42vw, 220px);
-  object-fit:contain;
-  border-radius:24px;
-  box-shadow:0 12px 32px rgba(0,0,0,0.45);
+width:min(42vw, 220px);
+height:min(42vw, 220px);
+object-fit:contain;
+border-radius:24px;
+box-shadow:0 12px 32px rgba(0,0,0,0.45);
 }
 
 .splash-title{
-  margin-top:18px;
-  color:#ffffff;
-  font-size:clamp(24px, 3.5vw, 38px);
-  font-weight:700;
-  letter-spacing:0.02em;
-  text-align:center;
+margin-top:18px;
+color:#ffffff;
+font-size:clamp(24px, 3.5vw, 38px);
+font-weight:700;
+letter-spacing:0.02em;
+text-align:center;
 }
 
 .splash-subtitle{
-  margin-top:8px;
-  color:rgba(255,255,255,0.72);
-  font-size:clamp(13px, 1.7vw, 18px);
-  text-align:center;
+margin-top:8px;
+color:rgba(255,255,255,0.72);
+font-size:clamp(13px, 1.7vw, 18px);
+text-align:center;
 }
 
 .container{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  width:100vw;
-  height:100vh;
-  gap:var(--gap);
-  padding:
-    calc(var(--outer-padding) + var(--safe-top) + var(--top-offset))
-    var(--outer-padding)
-    calc(var(--outer-padding) + var(--safe-bottom))
-    var(--outer-padding);
-  background:var(--bg-shell);
+display:grid;
+grid-template-columns:1fr 1fr;
+width:100vw;
+height:100vh;
+gap:var(--gap);
+padding:
+calc(var(--outer-padding) + var(--safe-top) + var(--top-offset))
+var(--outer-padding)
+calc(var(--outer-padding) + var(--safe-bottom))
+var(--outer-padding);
+background:var(--bg-shell);
 }
 
+/* HER er ændringen (kalender får mere plads) */
+
 .left-column{
-  display:grid;
-  grid-template-rows:minmax(0, 1fr) var(--gap) minmax(0, 1fr);
-  gap:0;
-  min-width:0;
-  min-height:0;
+display:grid;
+grid-template-rows:minmax(0, 1.35fr) var(--gap) minmax(0, 0.65fr);
+gap:0;
+min-width:0;
+min-height:0;
 }
 
 .right-column{
-  display:flex;
-  flex-direction:column;
-  gap:var(--gap);
-  min-width:0;
-  min-height:0;
+display:flex;
+flex-direction:column;
+gap:var(--gap);
+min-width:0;
+min-height:0;
 }
 
 .panel{
-  position:relative;
-  min-width:0;
-  min-height:0;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
-    var(--panel-bg);
-  border-radius:var(--panel-radius);
-  overflow:hidden;
-  box-shadow:
-    0 0 0 1px var(--panel-border),
-    0 16px 38px var(--panel-shadow),
-    inset 0 1px 0 var(--panel-highlight);
+position:relative;
+min-width:0;
+min-height:0;
+background:
+linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
+var(--panel-bg);
+border-radius:var(--panel-radius);
+overflow:hidden;
+box-shadow:
+0 0 0 1px var(--panel-border),
+0 16px 38px var(--panel-shadow),
+inset 0 1px 0 var(--panel-highlight);
 }
 
 .panel::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:28%;
-  background:linear-gradient(to bottom, rgba(255,255,255,0.04), transparent);
-  pointer-events:none;
-  z-index:1;
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:28%;
+background:linear-gradient(to bottom, rgba(255,255,255,0.04), transparent);
+pointer-events:none;
+z-index:1;
 }
 
 .left-section{
-  display:flex;
-  flex-direction:column;
-  min-width:0;
-  min-height:0;
+display:flex;
+flex-direction:column;
+min-width:0;
+min-height:0;
 }
 
 .top-banner,
 .calendar-banner,
 .slides-banner{
-  position:relative;
-  z-index:2;
-  color:white;
-  text-align:center;
-  font-size:16px;
-  padding:6px 10px;
-  font-weight:600;
-  flex:0 0 auto;
-  border-top-left-radius:var(--panel-radius);
-  border-top-right-radius:var(--panel-radius);
+position:relative;
+z-index:2;
+color:white;
+text-align:center;
+font-size:16px;
+padding:6px 10px;
+font-weight:600;
+flex:0 0 auto;
+border-top-left-radius:var(--panel-radius);
+border-top-right-radius:var(--panel-radius);
 }
 
 .calendar-banner{
-  background:linear-gradient(#d23737,#9f1f1f);
+background:linear-gradient(#d23737,#9f1f1f);
 }
 
 .top-banner{
-  background:linear-gradient(#3a9641,#25682b);
+background:linear-gradient(#3a9641,#25682b);
 }
 
 .slides-banner{
-  background:linear-gradient(#2a78d2,#164e91);
+background:linear-gradient(#2a78d2,#164e91);
 }
 
 .calendar-content,
 .slideshow,
 .right-content{
-  position:relative;
-  flex:1;
-  min-height:0;
+position:relative;
+flex:1;
+min-height:0;
 }
 
 .frame-inner{
-  position:absolute;
-  inset:0;
-  border-radius:calc(var(--panel-radius) - 1px);
-  background:#000;
-  overflow:hidden;
+position:absolute;
+inset:0;
+border-radius:calc(var(--panel-radius) - 1px);
+background:#000;
+overflow:hidden;
 }
 
 iframe{
-  width:100%;
-  height:100%;
-  border:none;
-  display:block;
-  background:white;
+width:100%;
+height:100%;
+border:none;
+display:block;
+background:white;
 }
 
 .calendar-zoom{
-  position:absolute;
-  top:10px;
-  left:0;
-  width:125%;
-  height:125%;
-  transform:scale(0.8);
-  transform-origin:0 0;
+position:absolute;
+top:10px;
+left:0;
+width:125%;
+height:125%;
+transform:scale(0.8);
+transform-origin:0 0;
 }
 
 .news-zoom{
-  position:absolute;
-  top:var(--news-top-offset);
-  left:0;
-  width:100%;
-  height:100%;
-  border:none;
-  display:block;
-  background:white;
-  transform:scale(var(--news-scale));
-  transform-origin:top center;
+position:absolute;
+top:var(--news-top-offset);
+left:0;
+width:100%;
+height:100%;
+border:none;
+display:block;
+background:white;
+transform:scale(var(--news-scale));
+transform-origin:top center;
 }
 
 .slideshow{
-  background:#000;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+background:#000;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .slideshow img{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  object-position:center center;
-  transform:translate(-50%, -50%);
-  opacity:0;
-  transition:opacity 1.8s ease-in-out;
-  background:#000;
-  z-index:1;
-  will-change:opacity;
+position:absolute;
+top:50%;
+left:50%;
+width:100%;
+height:100%;
+object-fit:contain;
+object-position:center center;
+transform:translate(-50%, -50%);
+opacity:0;
+transition:opacity 1.8s ease-in-out;
+background:#000;
+z-index:1;
+will-change:opacity;
 }
 
 .slideshow img.active{
-  opacity:1;
-  z-index:2;
+opacity:1;
+z-index:2;
 }
 
 .divider-horizontal{
-  height:var(--gap);
-  width:100%;
-  border-radius:999px;
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.12),
-    var(--divider-mid),
-    var(--divider-dark)
-  );
+height:var(--gap);
+width:100%;
+border-radius:999px;
+background:linear-gradient(
+to bottom,
+rgba(255,255,255,0.12),
+var(--divider-mid),
+var(--divider-dark)
+);
 }
 
 @media (orientation: portrait){
-  :root{
-    --top-offset:2px;
-    --news-scale:1.10;
-    --news-top-offset:0px;
-  }
 
-  .container{
-    grid-template-columns:1fr;
-    grid-template-rows:1fr 1fr;
-  }
+:root{
+--top-offset:1px;
+--news-scale:1.10;
+}
 
-  .left-column,
-  .right-column{
-    min-height:0;
-  }
+.container{
+grid-template-columns:1fr;
+grid-template-rows:1fr 1fr;
+}
 
-  .top-banner,
-  .calendar-banner,
-  .slides-banner{
-    font-size:14px;
-    padding:7px 10px;
-  }
+.left-column,
+.right-column{
+min-height:0;
+}
 
-  .slideshow img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    object-position:center center;
-  }
+.top-banner,
+.calendar-banner,
+.slides-banner{
+font-size:14px;
+padding:7px 10px;
+}
 
-  .splash-logo{
-    width:min(58vw, 230px);
-    height:min(58vw, 230px);
-  }
+.splash-logo{
+width:min(58vw, 230px);
+height:min(58vw, 230px);
+}
 
-  .calendar-zoom{
-    top:14px;
-  }
+.calendar-zoom{
+top:14px;
+}
 }
 </style>
 </head>
@@ -334,121 +327,114 @@ iframe{
 <body>
 
 <div id="splashScreen">
-  <img src="icon-512.png" alt="Nørholm Infotavle" class="splash-logo">
-  <div class="splash-title">Nørholm Infotavle</div>
-  <div class="splash-subtitle">Indlæser...</div>
+<img src="icon-512.png" alt="Nørholm Infotavle" class="splash-logo">
+<div class="splash-title">Nørholm Infotavle</div>
+<div class="splash-subtitle">Indlæser...</div>
 </div>
 
 <div class="container">
 
-  <div class="left-column">
+<div class="left-column">
 
-    <div class="left-section panel">
-      <div class="calendar-banner">
-        Kalender over kommende aktiviteter i byen
-      </div>
+<div class="left-section panel">
+<div class="calendar-banner">
+Kalender over kommende aktiviteter i byen
+</div>
 
-      <div class="calendar-content">
-        <div class="frame-inner">
-          <iframe
-            id="calendarFrame"
-            class="calendar-zoom"
-            src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0">
-          </iframe>
-        </div>
-      </div>
-    </div>
+<div class="calendar-content">
+<div class="frame-inner">
+<iframe
+id="calendarFrame"
+class="calendar-zoom"
+src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0">
+</iframe>
+</div>
+</div>
+</div>
 
-    <div class="divider-horizontal"></div>
+<div class="divider-horizontal"></div>
 
-    <div class="left-section panel">
-      <div class="slides-banner">
-        Lokalt erhvervsliv (sponsorer)
-      </div>
+<div class="left-section panel">
+<div class="slides-banner">
+Lokalt erhvervsliv (sponsorer)
+</div>
 
-      <div class="slideshow">
-        <img src="SH-generalinfo.jpg" class="active" alt="Sponsor 1">
-        <img src="SH-Brudens-klaedeskab.jpg" alt="Sponsor 2">
-        <img src="SH-Porsheden.jpg" alt="Sponsor 3">
-      </div>
-    </div>
+<div class="slideshow">
+<img src="SH-generalinfo.jpg" class="active">
+<img src="SH-Brudens-klaedeskab.jpg">
+<img src="SH-Porsheden.jpg">
+</div>
+</div>
 
-  </div>
+</div>
 
-  <div class="right-column">
+<div class="right-column">
 
-    <div class="top-banner panel">
-      Aktuelle aktiviteter - Læs mere via QR koden
-    </div>
+<div class="top-banner panel">
+Aktuelle aktiviteter - Læs mere via QR koden
+</div>
 
-    <div class="right-content panel">
-      <div class="frame-inner">
-        <iframe
-          id="newsFrame"
-          class="news-zoom"
-          src="https://borgernyt.dk/infotavle-blandet/"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-        </iframe>
-      </div>
-    </div>
+<div class="right-content panel">
+<div class="frame-inner">
+<iframe
+id="newsFrame"
+class="news-zoom"
+src="https://borgernyt.dk/infotavle-blandet/"
+sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+</iframe>
+</div>
+</div>
 
-  </div>
+</div>
 
 </div>
 
 <script>
-const slides = document.querySelectorAll(".slideshow img");
-let index = 0;
+const slides=document.querySelectorAll(".slideshow img");
+let index=0;
 
-if (slides.length > 1) {
-  setInterval(() => {
-    slides[index].classList.remove("active");
-    index = (index + 1) % slides.length;
-    slides[index].classList.add("active");
-  }, 5000);
+if(slides.length>1){
+setInterval(()=>{
+slides[index].classList.remove("active");
+index=(index+1)%slides.length;
+slides[index].classList.add("active");
+},5000);
 }
 
-function refreshIframe(frameId, baseUrl){
-  const frame = document.getElementById(frameId);
-  if (!frame) return;
-  const sep = baseUrl.includes("?") ? "&" : "?";
-  frame.src = baseUrl + sep + "_ts=" + Date.now();
+function refreshIframe(frameId,baseUrl){
+const frame=document.getElementById(frameId);
+if(!frame)return;
+const sep=baseUrl.includes("?")?"&":"?";
+frame.src=baseUrl+sep+"_ts="+Date.now();
 }
 
-setInterval(() => {
-  refreshIframe(
-    "newsFrame",
-    "https://borgernyt.dk/infotavle-blandet/"
-  );
-
-  refreshIframe(
-    "calendarFrame",
-    "https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0"
-  );
-}, 1800000);
+setInterval(()=>{
+refreshIframe("newsFrame","https://borgernyt.dk/infotavle-blandet/");
+refreshIframe("calendarFrame","https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0");
+},1800000);
 
 function refreshSlides(){
-  document.querySelectorAll(".slideshow img").forEach(img => {
-    const original = img.getAttribute("src").split("?")[0];
-    img.setAttribute("src", original + "?v=" + Date.now());
-  });
+document.querySelectorAll(".slideshow img").forEach(img=>{
+const original=img.getAttribute("src").split("?")[0];
+img.setAttribute("src",original+"?v="+Date.now());
+});
 }
 
-setInterval(refreshSlides, 1800000);
+setInterval(refreshSlides,1800000);
 
-setInterval(() => {
-  const cleanUrl = window.location.origin + window.location.pathname + "?v=" + Date.now();
-  window.location.replace(cleanUrl);
-}, 21600000);
+setInterval(()=>{
+const cleanUrl=window.location.origin+window.location.pathname+"?v="+Date.now();
+window.location.replace(cleanUrl);
+},21600000);
 
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    const splash = document.getElementById("splashScreen");
-    if (splash) {
-      splash.classList.add("hide");
-      setTimeout(() => splash.remove(), 900);
-    }
-  }, 1200);
+window.addEventListener("load",()=>{
+setTimeout(()=>{
+const splash=document.getElementById("splashScreen");
+if(splash){
+splash.classList.add("hide");
+setTimeout(()=>splash.remove(),900);
+}
+},1200);
 });
 </script>
 
