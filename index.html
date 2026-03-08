@@ -51,7 +51,7 @@ html, body{
   --top-offset:2px;
 
   /* højre felt */
-  --news-scale:0.90;
+  --news-scale:1;
   --news-top:0px;
   --news-left:0px;
   --news-width:100%;
@@ -310,7 +310,7 @@ iframe{
 @media (orientation: portrait){
   :root{
     --top-offset:1px;
-    --news-scale:0.90;
+    --news-scale:1;
     --news-top:0px;
     --news-left:0px;
     --news-width:100%;
@@ -479,7 +479,7 @@ function startSlideshow() {
       slides[currentSlideIndex].classList.remove("active");
       currentSlideIndex = (currentSlideIndex + 1) % slides.length;
       slides[currentSlideIndex].classList.add("active");
-    }, 5000);
+    }, 7000);
   }
 }
 
