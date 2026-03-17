@@ -67,6 +67,52 @@ body{
     var(--bg-main);
 }
 
+/* Splash - bruges kun på Apple/iPhone/iPad */
+#splashScreen{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,0.04), transparent 30%),
+    #050505;
+  opacity:1;
+  transition:opacity 0.8s ease;
+}
+
+#splashScreen.hide{
+  opacity:0;
+  pointer-events:none;
+}
+
+.splash-logo{
+  width:min(42vw, 220px);
+  height:min(42vw, 220px);
+  object-fit:contain;
+  border-radius:24px;
+  box-shadow:0 12px 32px rgba(0,0,0,0.45);
+}
+
+.splash-title{
+  margin-top:18px;
+  color:#ffffff;
+  font-size:clamp(24px, 3.5vw, 38px);
+  font-weight:700;
+  letter-spacing:0.02em;
+  text-align:center;
+}
+
+.splash-subtitle{
+  margin-top:8px;
+  color:rgba(255,255,255,0.72);
+  font-size:clamp(13px, 1.7vw, 18px);
+  text-align:center;
+}
+
 .container{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -308,6 +354,11 @@ iframe{
     font-size:14px;
   }
 
+  .splash-logo{
+    width:min(58vw, 230px);
+    height:min(58vw, 230px);
+  }
+
   .calendar-zoom{
     top:8px;
   }
@@ -326,6 +377,12 @@ iframe{
 </head>
 
 <body>
+
+<div id="splashScreen">
+  <img src="icon-512.png" alt="Nørholm Infotavle" class="splash-logo">
+  <div class="splash-title">Nørholm Infotavle</div>
+  <div class="splash-subtitle">Indlæser...</div>
+</div>
 
 <div class="container">
 
@@ -400,6 +457,37 @@ const sponsorLinks = {
 let slides = [];
 let currentSlideIndex = 0;
 let slideInterval = null;
+let minSplashTimeDone = false;
+let appReady = false;
+
+function isAppleMobile() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const iPhoneiPad = /iPhone|iPad|iPod/i.test(ua);
+  const iPadOS13Plus = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  return iPhoneiPad || iPadOS13Plus;
+}
+
+function hideSplashWhenReady() {
+  if (!isAppleMobile()) return;
+  if (!minSplashTimeDone || !appReady) return;
+
+  const splash = document.getElementById("splashScreen");
+  if (!splash) return;
+
+  splash.classList.add("hide");
+  setTimeout(() => {
+    if (splash.parentNode) splash.remove();
+  }, 900);
+}
+
+function setupSplashMode() {
+  const splash = document.getElementById("splashScreen");
+  if (!splash) return;
+
+  if (!isAppleMobile()) {
+    splash.remove();
+  }
+}
 
 function detectGitHubInfo() {
   const host = window.location.hostname;
@@ -530,6 +618,8 @@ function refreshIframe(frameId, baseUrl){
   frame.src = baseUrl + sep + "_ts=" + Date.now();
 }
 
+setupSplashMode();
+
 setInterval(() => {
   refreshIframe(
     "newsFrame",
@@ -552,11 +642,21 @@ setInterval(() => {
 }, 21600000);
 
 window.addEventListener("load", async () => {
+  if (isAppleMobile()) {
+    setTimeout(() => {
+      minSplashTimeDone = true;
+      hideSplashWhenReady();
+    }, 1200);
+  }
+
   try {
     await loadSponsorImages();
   } catch (e) {
     console.error(e);
   }
+
+  appReady = true;
+  hideSplashWhenReady();
 });
 
 if ("serviceWorker" in navigator) {
