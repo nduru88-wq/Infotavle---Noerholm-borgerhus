@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Infoboard</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<meta name="theme-color" content="#050505">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Infoboard">
+
+<style>
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#050505;
+  touch-action:manipulation;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --panel-radius:18px;
+  --gap:2px;
+  --outer-padding:2px;
+
+  --bg-main:#050505;
+  --bg-shell:#0a0a0a;
+  --panel-bg:#0d0d0f;
+
+  --panel-border:rgba(255,255,255,0.05);
+  --panel-highlight:rgba(255,255,255,0.06);
+  --panel-shadow:rgba(0,0,0,0.60);
+
+  --divider-dark:#161616;
+  --divider-mid:#242424;
+
+  --safe-top:env(safe-area-inset-top, 0px);
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+
+  --top-offset:2px;
+
+  /* højre felt */
+  --news-scale:1;
+  --news-top:0px;
+  --news-left:0px;
+  --news-width:100%;
+  --news-height:100%;
+
+  --banner-pad-y:6px;
+  --banner-pad-x:10px;
+}
+
+body{
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.04), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 30%),
+    var(--bg-main);
+}
+
+/* Splash */
+#splashScreen{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,0.04), transparent 30%),
+    #050505;
+  opacity:1;
+  transition:opacity 0.8s ease;
+}
+
+#splashScreen.hide{
+  opacity:0;
+  pointer-events:none;
+}
+
+.splash-logo{
+  width:min(42vw, 220px);
+  height:min(42vw, 220px);
+  object-fit:contain;
+  border-radius:24px;
+  box-shadow:0 12px 32px rgba(0,0,0,0.45);
+}
+
+.splash-title{
+  margin-top:18px;
+  color:#ffffff;
+  font-size:clamp(24px, 3.5vw, 38px);
+  font-weight:700;
+  letter-spacing:0.02em;
+  text-align:center;
+}
+
+.splash-subtitle{
+  margin-top:8px;
+  color:rgba(255,255,255,0.72);
+  font-size:clamp(13px, 1.7vw, 18px);
+  text-align:center;
+}
+
+.container{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  width:100vw;
+  height:100vh;
+  gap:var(--gap);
+  padding:
+    calc(var(--outer-padding) + var(--safe-top) + var(--top-offset))
+    var(--outer-padding)
+    calc(var(--outer-padding) + var(--safe-bottom))
+    var(--outer-padding);
+  background:var(--bg-shell);
+}
+
+.left-column{
+  display:grid;
+  grid-template-rows:minmax(0, 1fr) var(--gap) minmax(0, 1fr);
+  gap:0;
+  min-width:0;
+  min-height:0;
+}
+
+.right-column{
+  display:grid;
+  grid-template-rows:minmax(0, 1fr);
+  min-width:0;
+  min-height:0;
+}
+
+.panel{
+  position:relative;
+  min-width:0;
+  min-height:0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
+    var(--panel-bg);
+  border-radius:var(--panel-radius);
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px var(--panel-border),
+    0 16px 38px var(--panel-shadow),
+    inset 0 1px 0 var(--panel-highlight);
+}
+
+.panel::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:28%;
+  background:linear-gradient(to bottom, rgba(255,255,255,0.04), transparent);
+  pointer-events:none;
+  z-index:1;
+}
+
+.left-section,
+.right-section{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:0;
+}
+
+.banner{
+  position:relative;
+  z-index:3;
+  color:#fff;
+  text-align:center;
+  font-size:16px;
+  font-weight:700;
+  padding:var(--banner-pad-y) var(--banner-pad-x);
+  flex:0 0 auto;
+  margin:0;
+  border-radius:0;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.35);
+}
+
+.panel > .banner:first-child,
+.left-section > .banner:first-child,
+.right-section > .banner:first-child{
+  border-top-left-radius:var(--panel-radius);
+  border-top-right-radius:var(--panel-radius);
+}
+
+.calendar-banner{
+  background:linear-gradient(180deg, #dc3a3a 0%, #b62020 55%, #8f1515 100%);
+}
+
+.top-banner{
+  background:linear-gradient(180deg, #3f9f47 0%, #2c7f33 55%, #215f27 100%);
+}
+
+.slides-banner{
+  background:linear-gradient(180deg, #3385e2 0%, #1f66bb 55%, #174d90 100%);
+}
+
+/* Tekstskift mellem desktop og mobil */
+.desktop-text{
+  display:inline;
+}
+
+.mobile-text{
+  display:none;
+}
+
+.calendar-content,
+.slideshow,
+.right-content{
+  position:relative;
+  flex:1;
+  min-height:0;
+}
+
+.frame-inner{
+  position:absolute;
+  inset:0;
+  border-radius:0 0 calc(var(--panel-radius) - 1px) calc(var(--panel-radius) - 1px);
+  background:#000;
+  overflow:hidden;
+}
+
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  display:block;
+  background:white;
+}
+
+.calendar-zoom{
+  position:absolute;
+  top:4px;
+  left:0;
+  width:125%;
+  height:125%;
+  transform:scale(0.8);
+  transform-origin:0 0;
+}
+
+.news-zoom{
+  position:absolute;
+  top:var(--news-top);
+  left:var(--news-left);
+  width:var(--news-width);
+  height:var(--news-height);
+  background:#fff;
+  transform:scale(var(--news-scale));
+  transform-origin:top left;
+}
+
+.slideshow{
+  background:#000;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.slideshow img{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center center;
+  transform:translate(-50%, -50%);
+  opacity:0;
+  transition:opacity 1.8s ease-in-out;
+  background:#000;
+  z-index:1;
+  will-change:opacity;
+}
+
+.slideshow img.active{
+  opacity:1;
+  z-index:2;
+}
+
+.slideshow-message{
+  color:#fff;
+  font-size:18px;
+  text-align:center;
+  padding:20px;
+  z-index:3;
+}
+
+.divider-horizontal{
+  height:var(--gap);
+  width:100%;
+  border-radius:999px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.12),
+    var(--divider-mid),
+    var(--divider-dark)
+  );
+}
+
+@media (orientation: portrait){
+  :root{
+    --top-offset:1px;
+    --news-scale:1;
+    --news-top:0px;
+    --news-left:0px;
+    --news-width:100%;
+    --news-height:100%;
+    --banner-pad-y:7px;
+    --banner-pad-x:10px;
+  }
+
+  .container{
+    grid-template-columns:1fr;
+    grid-template-rows:1fr 1fr;
+  }
+
+  .left-column{
+    grid-template-rows:minmax(0, 1fr) var(--gap) minmax(0, 1fr);
+  }
+
+  .right-column{
+    grid-template-rows:minmax(0, 1fr);
+  }
+
+  .left-column,
+  .right-column{
+    min-height:0;
+  }
+
+  .banner{
+    font-size:14px;
+  }
+
+  .splash-logo{
+    width:min(58vw, 230px);
+    height:min(58vw, 230px);
+  }
+
+  .calendar-zoom{
+    top:8px;
+  }
+}
+
+/* Mobiltelefoner: vis alternativ tekst */
+@media (max-width: 768px){
+  .desktop-text{
+    display:none;
+  }
+
+  .mobile-text{
+    display:inline;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="splashScreen">
+  <img src="icon-512.png" alt="Nørholm Infotavle" class="splash-logo">
+  <div class="splash-title">Nørholm Infotavle</div>
+  <div class="splash-subtitle">Indlæser...</div>
+</div>
+
+<div class="container">
+
+  <div class="left-column">
+
+    <div class="left-section panel">
+      <div class="banner calendar-banner">
+        Kalender over kommende aktiviteter i byen
+      </div>
+
+      <div class="calendar-content">
+        <div class="frame-inner">
+          <iframe
+            id="calendarFrame"
+            class="calendar-zoom"
+            src="https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0">
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider-horizontal"></div>
+
+    <div class="left-section panel">
+      <div class="banner slides-banner">
+        <span class="desktop-text">Lokalt erhvervsliv (sponsorer)</span>
+        <span class="mobile-text">Lokalt erhvervsliv (sponsorer) - Tryk for info</span>
+      </div>
+
+      <div class="slideshow" id="sponsorSlideshow">
+        <div class="slideshow-message" id="slideshowMessage">Indlæser sponsorbilleder...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-column">
+    <div class="right-section panel">
+      <div class="banner top-banner">
+        <span class="desktop-text">Aktuelle aktiviteter - Læs mere via QR koden</span>
+        <span class="mobile-text">Aktuelle aktiviteter - Tryk for info</span>
+      </div>
+
+      <div class="right-content">
+        <div class="frame-inner">
+          <iframe
+            id="newsFrame"
+            class="news-zoom"
+            src="https://borgernyt.dk/infotavle-blandet/"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const GITHUB_FOLDER = "sponsorer";
+const slideshow = document.getElementById("sponsorSlideshow");
+const slideshowMessage = document.getElementById("slideshowMessage");
+
+let slides = [];
+let currentSlideIndex = 0;
+let slideInterval = null;
+
+function detectGitHubInfo() {
+  const host = window.location.hostname;
+  const pathParts = window.location.pathname.split("/").filter(Boolean);
+
+  let owner = "";
+  let repo = "";
+
+  if (host.endsWith(".github.io")) {
+    owner = host.split(".github.io")[0];
+
+    if (pathParts.length > 0) {
+      repo = pathParts[0];
+    } else {
+      repo = owner + ".github.io";
+    }
+  }
+
+  return { owner, repo };
+}
+
+function getGitHubApiUrl() {
+  const { owner, repo } = detectGitHubInfo();
+  return `https://api.github.com/repos/${owner}/${repo}/contents/${GITHUB_FOLDER}`;
+}
+
+function isImageFile(filename) {
+  return /\.(jpg|jpeg|png|webp|gif)$/i.test(filename);
+}
+
+function clearSlides() {
+  slideshow.querySelectorAll("img").forEach(img => img.remove());
+}
+
+function showMessage(text) {
+  if (slideshowMessage) {
+    slideshowMessage.textContent = text;
+    slideshowMessage.style.display = "block";
+  }
+}
+
+function hideMessage() {
+  if (slideshowMessage) {
+    slideshowMessage.style.display = "none";
+  }
+}
+
+function startSlideshow() {
+  if (slideInterval) clearInterval(slideInterval);
+
+  if (slides.length > 1) {
+    slideInterval = setInterval(() => {
+      slides[currentSlideIndex].classList.remove("active");
+      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+      slides[currentSlideIndex].classList.add("active");
+    }, 7000);
+  }
+}
+
+function renderSlides(imageUrls) {
+  clearSlides();
+
+  if (!imageUrls.length) {
+    showMessage("Ingen billeder fundet i mappen sponsorer.");
+    slides = [];
+    return;
+  }
+
+  hideMessage();
+
+  imageUrls.forEach((url, index) => {
+    const img = document.createElement("img");
+    img.src = url + "?v=" + Date.now();
+    img.alt = `Sponsor ${index + 1}`;
+    if (index === 0) img.classList.add("active");
+    slideshow.appendChild(img);
+  });
+
+  slides = slideshow.querySelectorAll("img");
+  currentSlideIndex = 0;
+  startSlideshow();
+}
+
+async function loadSponsorImages() {
+  try {
+    const apiUrl = getGitHubApiUrl();
+    const response = await fetch(apiUrl, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error("Kunne ikke hente mapper fra GitHub API");
+    }
+
+    const files = await response.json();
+
+    const imageUrls = files
+      .filter(file => file.type === "file" && isImageFile(file.name))
+      .sort((a, b) => a.name.localeCompare(b.name, "da", { numeric: true }))
+      .map(file => file.download_url);
+
+    renderSlides(imageUrls);
+
+  } catch (error) {
+    console.error(error);
+    showMessage("Fejl ved indlæsning af sponsorbilleder.");
+  }
+}
+
+function refreshIframe(frameId, baseUrl){
+  const frame = document.getElementById(frameId);
+  if (!frame) return;
+  const sep = baseUrl.includes("?") ? "&" : "?";
+  frame.src = baseUrl + sep + "_ts=" + Date.now();
+}
+
+setInterval(() => {
+  refreshIframe(
+    "newsFrame",
+    "https://borgernyt.dk/infotavle-blandet/"
+  );
+
+  refreshIframe(
+    "calendarFrame",
+    "https://calendar.google.com/calendar/embed?src=fd7eaf4e2aa69c3e984a83824983eb7655b38893a5d5c95d4145d28197a0402c%40group.calendar.google.com&mode=AGENDA&ctz=Europe%2FCopenhagen&showTitle=0&showNav=0&showPrint=0&showCalendars=0"
+  );
+}, 1800000);
+
+setInterval(() => {
+  loadSponsorImages();
+}, 1800000);
+
+setInterval(() => {
+  const cleanUrl = window.location.origin + window.location.pathname + "?v=" + Date.now();
+  window.location.replace(cleanUrl);
+}, 21600000);
+
+window.addEventListener("load", async () => {
+  await loadSponsorImages();
+
+  setTimeout(() => {
+    const splash = document.getElementById("splashScreen");
+    if (splash) {
+      splash.classList.add("hide");
+      setTimeout(() => splash.remove(), 900);
+    }
+  }, 1200);
+});
+</script>
+
+</body>
+</html>
