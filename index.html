@@ -13,6 +13,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Infoboard">
 
+<script>
+(function () {
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const iPhoneiPad = /iPhone|iPad|iPod/i.test(ua);
+  const iPadOS13Plus = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+
+  if (iPhoneiPad || iPadOS13Plus) {
+    document.documentElement.classList.add("apple-device");
+  } else {
+    document.documentElement.classList.add("non-apple-device");
+  }
+})();
+</script>
+
 <style>
 html, body{
   margin:0;
@@ -67,8 +81,13 @@ body{
     var(--bg-main);
 }
 
-/* Splash - bruges kun på Apple/iPhone/iPad */
+/* Splash - skjult som standard */
 #splashScreen{
+  display:none;
+}
+
+/* Vis kun splash på Apple-enheder */
+html.apple-device #splashScreen{
   position:fixed;
   inset:0;
   z-index:99999;
@@ -84,7 +103,7 @@ body{
   transition:opacity 0.8s ease;
 }
 
-#splashScreen.hide{
+html.apple-device #splashScreen.hide{
   opacity:0;
   pointer-events:none;
 }
@@ -461,10 +480,7 @@ let minSplashTimeDone = false;
 let appReady = false;
 
 function isAppleMobile() {
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  const iPhoneiPad = /iPhone|iPad|iPod/i.test(ua);
-  const iPadOS13Plus = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
-  return iPhoneiPad || iPadOS13Plus;
+  return document.documentElement.classList.contains("apple-device");
 }
 
 function hideSplashWhenReady() {
@@ -478,15 +494,6 @@ function hideSplashWhenReady() {
   setTimeout(() => {
     if (splash.parentNode) splash.remove();
   }, 900);
-}
-
-function setupSplashMode() {
-  const splash = document.getElementById("splashScreen");
-  if (!splash) return;
-
-  if (!isAppleMobile()) {
-    splash.remove();
-  }
 }
 
 function detectGitHubInfo() {
@@ -617,8 +624,6 @@ function refreshIframe(frameId, baseUrl){
   const sep = baseUrl.includes("?") ? "&" : "?";
   frame.src = baseUrl + sep + "_ts=" + Date.now();
 }
-
-setupSplashMode();
 
 setInterval(() => {
   refreshIframe(
