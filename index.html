@@ -50,7 +50,6 @@ html, body{
 
   --top-offset:2px;
 
-  /* højre felt */
   --news-scale:1;
   --news-top:0px;
   --news-left:0px;
@@ -288,11 +287,13 @@ iframe{
   background:#000;
   z-index:1;
   will-change:opacity;
+  pointer-events:none;
 }
 
 .slideshow img.active{
   opacity:1;
   z-index:2;
+  pointer-events:auto;
 }
 
 .slideshow img.clickable{
@@ -456,6 +457,20 @@ const sponsorLinks = {
 let slides = [];
 let currentSlideIndex = 0;
 let slideInterval = null;
+let minSplashTimeDone = false;
+let appReady = false;
+
+function hideSplashWhenReady() {
+  if (!minSplashTimeDone || !appReady) return;
+
+  const splash = document.getElementById("splashScreen");
+  if (!splash) return;
+
+  splash.classList.add("hide");
+  setTimeout(() => {
+    if (splash.parentNode) splash.remove();
+  }, 900);
+}
 
 function detectGitHubInfo() {
   const host = window.location.hostname;
@@ -528,7 +543,11 @@ function openSponsorLink(url) {
 function renderSlides(files) {
   clearSlides();
 
-  if (!files.length) {
+  const imageFiles = files
+    .filter(file => file.type === "file" && isImageFile(file.name))
+    .sort((a, b) => a.name.localeCompare(b.name, "da", { numeric: true }));
+
+  if (!imageFiles.length) {
     showMessage("Ingen billeder fundet i mappen sponsorer.");
     slides = [];
     return;
@@ -536,24 +555,21 @@ function renderSlides(files) {
 
   hideMessage();
 
-  files
-    .filter(file => file.type === "file" && isImageFile(file.name))
-    .sort((a, b) => a.name.localeCompare(b.name, "da", { numeric: true }))
-    .forEach((file, index) => {
-      const img = document.createElement("img");
-      img.src = file.download_url + "?v=" + Date.now();
-      img.alt = `Sponsor ${index + 1}`;
-      img.dataset.filename = file.name;
+  imageFiles.forEach((file, index) => {
+    const img = document.createElement("img");
+    img.src = file.download_url + "?v=" + Date.now();
+    img.alt = `Sponsor ${index + 1}`;
+    img.dataset.filename = file.name;
 
-      const link = sponsorLinks[file.name];
-      if (link) {
-        img.classList.add("clickable");
-        img.addEventListener("click", () => openSponsorLink(link));
-      }
+    const link = sponsorLinks[file.name];
+    if (link) {
+      img.classList.add("clickable");
+      img.addEventListener("click", () => openSponsorLink(link));
+    }
 
-      if (index === 0) img.classList.add("active");
-      slideshow.appendChild(img);
-    });
+    if (index === 0) img.classList.add("active");
+    slideshow.appendChild(img);
+  });
 
   slides = slideshow.querySelectorAll("img");
   currentSlideIndex = 0;
@@ -607,16 +623,28 @@ setInterval(() => {
 }, 21600000);
 
 window.addEventListener("load", async () => {
-  await loadSponsorImages();
-
   setTimeout(() => {
-    const splash = document.getElementById("splashScreen");
-    if (splash) {
-      splash.classList.add("hide");
-      setTimeout(() => splash.remove(), 900);
-    }
+    minSplashTimeDone = true;
+    hideSplashWhenReady();
   }, 1200);
+
+  try {
+    await loadSponsorImages();
+  } catch (e) {
+    console.error(e);
+  }
+
+  appReady = true;
+  hideSplashWhenReady();
 });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("Service worker registreret"))
+      .catch(err => console.log("Service worker fejl:", err));
+  });
+}
 </script>
 
 </body>
